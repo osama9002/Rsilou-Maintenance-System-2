@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rsilou Maintenance Management System - 2026</title>
+    <style>
+        /* --- ORIGINAL UI STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #0f172a;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 24px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0;
+        }
+        
+        .subtitle {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
+            margin: 32px 0;
+        }
+        
+        @media (min-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        
+        .stat-card {
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-card.blue {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+        
+        .stat-card.green {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
+        
+        .stat-card.amber {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.95;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 48px;
+            font-weight: 800;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Cards */
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+            transition: box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            padding: 24px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-body {
+            padding: 24px;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #e2e8f0;
+            color: #64748b;
+        }
+        
+        .btn-outline:hover {
+            background: #f8fafc;
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            color: #64748b;
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
+        .btn-ghost:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 13px;
+        }
+        
+        /* Inputs */
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        
+        .input-label.required::after {
+            content: ' *';
+            color: #ef4444;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #0f172a;
+            background: white;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            transform: scale(1.01);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* Filters */
+        .filters-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        
+        @media (min-width: 768px) {
+            .filters-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 16px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748b;
+            border-bottom: 2px solid #e2e8f0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+        
+        tr:hover {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-closed {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+        }
+        
+        .badge-pending {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-rejected {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+        }
+        
+        .badge-outline {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            color: #64748b;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            padding: 24px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: #f8fafc;
+        }
+        
+        /* Form sections */
+        .form-section {
+            margin-bottom: 28px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .form-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        
+        @media (min-width: 768px) {
+            .form-grid { grid-template-columns: repeat(2, 1fr); }
+            .form-grid.three-cols { grid-template-columns: repeat(3, 1fr); }
+        }
+        
+        /* Toast notification */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .toast {
+            position: relative;
+            padding: 16px 32px;
+            border-radius: 12px;
+            color: white;
+            animation: slideIn 0.4s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toast.success {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
+        
+        .toast.error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .toast.info {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(120%); opacity: 0; }
+        }
+        
+        /* Close button */
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #64748b;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: #ef4444;
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 64px 24px;
+            color: #64748b;
+        }
+        
+        .empty-icon {
+            font-size: 80px;
+            opacity: 0.4;
+            margin-bottom: 24px;
+        }
+        
+        /* Footer */
+        footer {
+            background: white;
+            border-top: 2px solid #e2e8f0;
+            padding: 24px 0;
+            margin-top: auto;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        /* Tabs */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .category-tab {
+            padding: 10px 20px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px solid #e2e8f0;
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .category-tab:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+        
+        .category-tab.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .category-tab .tab-count {
+            background: #ef4444;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        
+        @media (max-width: 640px) {
+            .category-tabs {
+                gap: 6px;
+            }
+            
+            .category-tab {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+        }
+        
+        /* Hide class */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-top: 2px solid #e2e8f0;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .pagination-info {
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pagination-btn {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pagination-btn:hover:not(:disabled) {
+            background: #f1f5f9;
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+        
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .pagination-pages {
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+        }
+        
+        .pagination-jump {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        .pagination-select {
+            padding: 6px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            background: white;
+            font-size: 13px;
+            color: #64748b;
+            cursor: pointer;
+        }
+        
+        .pagination-select:hover {
+            border-color: #3b82f6;
+        }
+        
+        @media (max-width: 768px) {
+            .pagination {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .pagination-controls,
+            .pagination-jump {
+                justify-content: center;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .stat-value {
+                font-size: 36px;
+            }
+            
+            .modal-content {
+                max-height: 95vh;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            * {
+                background: white !important;
+                color: black !important;
+            }
+            
+            body {
+                background: white !important;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .modal-overlay {
+                position: relative !important;
+                background: white !important;
+                backdrop-filter: none !important;
+                box-shadow: none !important;
+            }
+            
+            .modal-content {
+                box-shadow: none !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            
+            .modal-header,
+            .modal-footer,
+            .close-btn,
+            .btn {
+                display: none !important;
+            }
+            
+            .modal-body {
+                padding: 20px !important;
+                overflow: visible !important;
+            }
+            
+            .print-hide {
+                display: none !important;
+            }
+            
+            header,
+            footer {
+                display: none !important;
+            }
+            
+            /* Show only modal content */
+            #viewModal {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100vh !important;
+                background: white !important;
+            }
+        }
+    </style>
+    <!-- SheetJS Library for Excel Import/Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- jsPDF Library for PDF Reports -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div>
+                    <h1>🔧 Rsilou Maintenance System</h1>
+                    <p class="subtitle">Comprehensive Maintenance Request Management - 2026</p>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="openAddModal()">
+                        <span style="font-size: 20px;">➕</span>
+                        Add New Record
+                    </button>
+                    <button class="btn btn-outline" onclick="exportToExcel()">
+                        <span style="font-size: 20px;">📊</span>
+                        Export Excel
+                    </button>
+                    <button class="btn btn-outline" onclick="document.getElementById('importExcel').click()">
+                        <span style="font-size: 20px;">📥</span>
+                        Import Excel
+                    </button>
+                    <input type="file" id="importExcel" accept=".xlsx,.xls" style="display: none;" onchange="importFromExcel(event)">
+                    <button class="btn btn-outline" onclick="createBackup()">
+                        <span style="font-size: 20px;">💾</span>
+                        Backup
+                    </button>
+                    <button class="btn btn-outline" onclick="document.getElementById('restoreBackup').click()">
+                        <span style="font-size: 20px;">📂</span>
+                        Restore
+                    </button>
+                    <input type="file" id="restoreBackup" accept=".json" style="display: none;" onchange="restoreBackup(event)">
+                    <button class="btn btn-outline" onclick="loadRecords()">
+                        <span style="font-size: 20px;">🔄</span>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main style="flex: 1;">
+        <div class="container" style="padding-top: 32px; padding-bottom: 32px;">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <div class="stat-label">Total Records</div>
+                    <div class="stat-value" id="totalRecords">0</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-label">Closed</div>
+                    <div class="stat-value" id="closedRecords">0</div>
+                </div>
+                <div class="stat-card amber">
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-value" id="pendingRecords">0</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>🔍</span>
+                        Search & Filter
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Category Tabs -->
+                    <div class="category-tabs">
+                        <button class="category-tab active" onclick="filterByTab('all')" data-tab="all">
+                            <span>📋</span>
+                            <span class="tab-count" id="tab-all">0</span>
+                            All
+                        </button>
+                        <button class="category-tab" onclick="filterByTab('Charger')" data-tab="Charger">
+                            <span>⚡</span>
+                            <span class="tab-count" id="tab-charger">0</span>
+                            Charger
+                        </button>
+                        <button class="category-tab" onclick="filterByTab('Cable')" data-tab="Cable">
+                            <span>🔌</span>
+                            <span class="tab-count" id="tab-cable">0</span>
+                            Cable
+                        </button>
+                        <button class="category-tab" onclick="filterByTab('Wired Earphone')" data-tab="Wired Earphone">
+                            <span>🎧</span>
+                            <span class="tab-count" id="tab-wired">0</span>
+                            Wired Earphone
+                        </button>
+                        <button class="category-tab" onclick="filterByTab('Bluetooth Earphone')" data-tab="Bluetooth Earphone">
+                            <span>🎵</span>
+                            <span class="tab-count" id="tab-bluetooth">0</span>
+                            Bluetooth
+                        </button>
+                        <button class="category-tab" onclick="filterByTab('Power Bank')" data-tab="Power Bank">
+                            <span>🔋</span>
+                            <span class="tab-count" id="tab-powerbank">0</span>
+                            Power Bank
+                        </button>
+                        <button class="category-tab" onclick="filterByTab('Other')" data-tab="Other">
+                            <span>📦</span>
+                            <span class="tab-count" id="tab-other">0</span>
+                            Other
+                        </button>
+                    </div>
+
+                    <!-- Search and Status Filter -->
+                    <div class="filters-grid" style="grid-template-columns: 1fr 2fr;">
+                        <input type="text" class="form-input" id="searchInput" 
+                               placeholder="Search by name, product, serial, delivery rep..." 
+                               oninput="filterRecords()">
+                        <select class="form-select" id="statusFilter" onchange="filterRecords()">
+                            <option value="all">All Statuses</option>
+                            <option value="Closed">Closed</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Records Table -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span>📋</span>
+                        Maintenance Records
+                    </div>
+                    <button class="btn btn-sm btn-outline" onclick="clearAllData()">
+                        🗑️ Clear All
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="tableContainer">
+                        <div style="text-align: center; padding: 48px; color: #64748b;">
+                            <div style="font-size: 48px; margin-bottom: 16px;">🔄</div>
+                            Loading data...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Modal -->
+    <div id="recordModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add New Record</h2>
+                <button class="close-btn" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="recordForm">
+                    <input type="hidden" id="recordId">
+                    
+                    <!-- Status Section -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">📊 Status Information</h3>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label class="input-label">Status</label>
+                                <select class="form-select" id="status">
+                                    <option value="Pending">Pending</option>
+                                    <option value="Closed">Closed</option>
+                                    <option value="Rejected">Rejected</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Receiving Date</label>
+                                <input type="date" class="form-input" id="receivingDate" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Customer Section -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">👤 Customer Information</h3>
+                        <div class="form-grid three-cols">
+                            <div class="input-group">
+                                <label class="input-label required">Customer Name</label>
+                                <input type="text" class="form-input" id="customerName" 
+                                       placeholder="Enter customer name" required>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Customer Code</label>
+                                <input type="text" class="form-input" id="customerCode" 
+                                       placeholder="C-XXXX">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Delivery Representative</label>
+                                <input type="text" class="form-input" id="deliveryREP" 
+                                       placeholder="Staff name">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Area</label>
+                                <input type="text" class="form-input" id="area" 
+                                       placeholder="City area">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Governorate</label>
+                                <input type="text" class="form-input" id="governrate" 
+                                       placeholder="Region">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Delivery Rep (2)</label>
+                                <input type="text" class="form-input" id="deliveryREP2" 
+                                       placeholder="Staff name">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Section -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">📦 Product Information</h3>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label class="input-label">Category</label>
+                                <select class="form-select" id="category">
+                                    <option value="">Select category</option>
+                                    <option value="Charger">Charger</option>
+                                    <option value="Cable">Cable</option>
+                                    <option value="Wired Earphone">Wired Earphone</option>
+                                    <option value="Bluetooth Earphone">Bluetooth Earphone</option>
+                                    <option value="Power Bank">Power Bank</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label required">Serial Number</label>
+                                <input type="text" class="form-input" id="serialNumber" 
+                                       placeholder="Enter serial number" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label required">Product Name</label>
+                            <input type="text" class="form-input" id="productName" 
+                                   placeholder="Enter full product name" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Issue Section -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">🔧 Issue & Response</h3>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label class="input-label">Issue Description</label>
+                                <textarea class="form-textarea" id="issue" 
+                                          placeholder="Describe issue in detail..." rows="4"></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Maintenance Response</label>
+                                <select class="form-select" id="maintenanceResponse">
+                                    <option value="">Select Response...</option>
+                                    <option value="Replacement">Replacement</option>
+                                    <option value="Credit Note">Credit Note</option>
+                                    <option value="Misuse">Misuse</option>
+                                    <option value="Out of Warranty">Out of Warranty</option>
+                                    <option value="Warranty Expired">Warranty Expired</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Credit Note Field (Hidden by default) -->
+                        <div class="input-group hidden" id="creditNoteGroup">
+                            <label class="input-label required">Credit Note Value / Ref</label>
+                            <input type="text" class="form-input" id="creditNoteValue" 
+                                   placeholder="Enter Credit Note amount or reference number">
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Info Section -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">📝 Additional Information</h3>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label class="input-label">Replacement Serial Number</label>
+                                <input type="text" class="form-input" id="replacementSerialNumber" 
+                                       placeholder="Replacement product SN">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">System Transfer Number</label>
+                                <input type="text" class="form-input" id="systemTransferNumber" 
+                                       placeholder="Example: WH/INT/00145">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Customer Delivery Date</label>
+                                <input type="date" class="form-input" id="customerDeliveryDate">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Maintenance Receipt Number</label>
+                                <input type="text" class="form-input" id="maintenanceReceiptNumber" 
+                                       placeholder="Receipt number">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notes Section -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">📌 Notes</h3>
+                        <div class="input-group">
+                            <label class="input-label">Additional Notes</label>
+                            <textarea class="form-textarea" id="notes" 
+                                      placeholder="Any additional notes or information..." rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-secondary" id="saveBtn" onclick="saveRecord()">💾 Save Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div id="viewModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Record Details</h2>
+                <button class="close-btn" onclick="closeViewModal()">✕</button>
+            </div>
+            <div class="modal-body" id="viewModalBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="printPDF()">
+                    <span style="font-size: 18px;">🖨️</span>
+                    Print PDF
+                </button>
+                <button class="btn btn-outline" onclick="closeViewModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="action-buttons" style="justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-outline" onclick="createBackup()">
+                    <span style="font-size: 18px;">💾</span>
+                    Backup All Data
+                </button>
+                <button class="btn btn-outline" onclick="document.getElementById('restoreBackupFooter').click()">
+                    <span style="font-size: 18px;">📂</span>
+                    Restore Backup
+                </button>
+                <input type="file" id="restoreBackupFooter" accept=".json" style="display: none;" onchange="restoreBackup(event)">
+            </div>
+            <p style="margin-top: 16px;">&copy; 2026 Rsilou Maintenance Management System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initial data
+        const initialRecords = [
+            {
+                id: 1,
+                status: 'Closed',
+                receivingDate: '2026-01-19',
+                deliveryREP: 'Wael Sharkawy Dream 2000 ✅',
+                customerName: 'Dream 2000',
+                customerCode: 'C-7772',
+                area: 'El Nozha El Gedida',
+                governrate: 'Cairo',
+                category: 'Charger',
+                productName: '[R1001-002] Rsilou 20W Charger White',
+                serialNumber: '300000245456',
+                issue: 'Tested, and it does not charge',
+                maintenanceResponse: 'Replacement',
+                replacementSerialNumber: '300000245467',
+                systemTransferNumber: 'WH/INT/00143',
+                customerDeliveryDate: '2026-01-21',
+                notes: 'System transfer completed from Premium stock to Scrap stock',
+                videoLink: '1001-002  456.mp4'
+            },
+            {
+                id: 2,
+                status: 'Rejected',
+                receivingDate: '2026-01-19',
+                deliveryREP: 'Amr Ali',
+                customerName: 'Client Name',
+                customerCode: 'C-0001',
+                area: 'Downtown',
+                governrate: 'Cairo',
+                category: 'Cable',
+                productName: '[R2002-001] Rsilou usb to micro 1m 2.4a cable White',
+                serialNumber: '300000246407',
+                issue: 'Cable physically cut',
+                maintenanceResponse: 'Misuse',
+                replacementSerialNumber: '',
+                systemTransferNumber: '',
+                customerDeliveryDate: '',
+                notes: 'Visible damage',
+                videoLink: ''
+            },
+            {
+                id: 3,
+                status: 'Pending',
+                receivingDate: '2026-01-20',
+                deliveryREP: 'N/A ❌',
+                customerName: 'N/A ❌',
+                customerCode: 'N/A ❌',
+                area: 'N/A ❌',
+                governrate: 'N/A ❌',
+                category: 'Wired Earphone',
+                productName: '[R3508-001] Rsilou Type-c Half in ear earphone White',
+                serialNumber: '300000265377',
+                issue: 'Tested, right earphone is not working',
+                maintenanceResponse: 'Credit Note',
+                creditNoteValue: '500 EGP', // Example data
+                replacementSerialNumber: '',
+                systemTransferNumber: '',
+                customerDeliveryDate: '',
+                notes: 'Waiting for parts',
+                videoLink: '3508-001  65377.mp4'
+            }
+        ];
+
+        // Global variables
+        let records = [];
+        let filteredRecords = [];
+        let isEditing = false;
+        let currentViewingId = null;
+        let currentTab = 'all';
+        let currentPage = 1;
+        const recordsPerPage = 20;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRecords();
+            
+            // Logic for Credit Note Field Visibility
+            const responseSelect = document.getElementById('maintenanceResponse');
+            const creditNoteGroup = document.getElementById('creditNoteGroup');
+            
+            responseSelect.addEventListener('change', function() {
+                if(this.value === 'Credit Note') {
+                    creditNoteGroup.classList.remove('hidden');
+                } else {
+                    creditNoteGroup.classList.add('hidden');
+                    // Optional: Clear value if hidden
+                    document.getElementById('creditNoteValue').value = '';
+                }
+            });
+        });
+
+        // Load records from LocalStorage
+        function loadRecords() {
+            const stored = localStorage.getItem('maintenanceRecords');
+            if (stored) {
+                records = JSON.parse(stored);
+                showToast('Data loaded from local storage', 'info');
+            } else {
+                records = [...initialRecords];
+                localStorage.setItem('maintenanceRecords', JSON.stringify(records));
+                showToast('Initial data loaded', 'info');
+            }
+            updateStats();
+            filterRecords();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = records.length;
+            const closed = records.filter(r => r.status === 'Closed').length;
+            const pending = records.filter(r => r.status === 'Pending').length;
+            
+            // Update tab counts
+            document.getElementById('tab-all').textContent = total;
+            document.getElementById('tab-charger').textContent = records.filter(r => r.category === 'Charger').length;
+            document.getElementById('tab-cable').textContent = records.filter(r => r.category === 'Cable').length;
+            document.getElementById('tab-wired').textContent = records.filter(r => r.category === 'Wired Earphone').length;
+            document.getElementById('tab-bluetooth').textContent = records.filter(r => r.category === 'Bluetooth Earphone').length;
+            document.getElementById('tab-powerbank').textContent = records.filter(r => r.category === 'Power Bank').length;
+            document.getElementById('tab-other').textContent = records.filter(r => r.category === 'Other').length;
+            
+            document.getElementById('totalRecords').textContent = total;
+            document.getElementById('closedRecords').textContent = closed;
+            document.getElementById('pendingRecords').textContent = pending;
+        }
+
+        // Export to Excel
+        function exportToExcel() {
+            if (records.length === 0) {
+                showToast('No records to export', 'error');
+                return;
+            }
+
+            // Prepare data for Excel
+            const excelData = records.map(record => ({
+                'ID': record.id,
+                'Status': record.status,
+                'Receiving Date': record.receivingDate,
+                'Delivery Representative': record.deliveryREP || '',
+                'Customer Name': record.customerName,
+                'Customer Code': record.customerCode || '',
+                'Area': record.area || '',
+                'Governorate': record.governrate || '',
+                'Category': record.category,
+                'Product Name': record.productName,
+                'Serial Number': record.serialNumber,
+                'Issue': record.issue || '',
+                'Maintenance Response': record.maintenanceResponse || '',
+                'Credit Note Value': record.creditNoteValue || '',
+                'Replacement SN': record.replacementSerialNumber || '',
+                'System Transfer Number': record.systemTransferNumber || '',
+                'Customer Delivery Date': record.customerDeliveryDate || '',
+                'Maintenance Receipt Number': record.maintenanceReceiptNumber || '',
+                'Notes': record.notes || '',
+                'Video Link': record.videoLink || ''
+            }));
+
+            // Create workbook
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Maintenance Records');
+
+            // Set column widths
+            ws['!cols'] = [
+                { wch: 6 },   // ID
+                { wch: 10 },  // Status
+                { wch: 15 },  // Receiving Date
+                { wch: 25 },  // Delivery Representative
+                { wch: 25 },  // Customer Name
+                { wch: 15 },  // Customer Code
+                { wch: 20 },  // Area
+                { wch: 15 },  // Governorate
+                { wch: 20 },  // Category
+                { wch: 40 },  // Product Name
+                { wch: 20 },  // Serial Number
+                { wch: 40 },  // Issue
+                { wch: 20 },  // Maintenance Response
+                { wch: 20 },  // Credit Note Value
+                { wch: 20 },  // Replacement SN
+                { wch: 20 },  // System Transfer Number
+                { wch: 15 },  // Customer Delivery Date
+                { wch: 20 },  // Maintenance Receipt Number
+                { wch: 40 },  // Notes
+                { wch: 30 }   // Video Link
+            ];
+
+            // Generate filename with timestamp
+            const timestamp = new Date().toISOString().slice(0, 10);
+            const filename = `maintenance_records_${timestamp}.xlsx`;
+
+            // Download file
+            XLSX.writeFile(wb, filename);
+            showToast(`Exported ${records.length} records to Excel`, 'success');
+        }
+
+        // Import from Excel
+        function importFromExcel(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const sheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+                    if (jsonData.length === 0) {
+                        showToast('No data found in Excel file', 'error');
+                        return;
+                    }
+
+                    // Map Excel data to record structure
+                    const importedRecords = jsonData.map((row, index) => {
+                        const maxId = records.length > 0 ? Math.max(...records.map(r => r.id)) : 0;
+
+                        return {
+                            id: maxId + index + 1,
+                            status: row['Status'] || 'Pending',
+                            receivingDate: row['Receiving Date'] || new Date().toISOString().split('T')[0],
+                            deliveryREP: row['Delivery Representative'] || row['Delivery REP'] || '',
+                            customerName: row['Customer Name'] || '',
+                            customerCode: row['Customer Code'] || '',
+                            area: row['Area'] || '',
+                            governrate: row['Governorate'] || '',
+                            category: row['Category'] || 'Other',
+                            productName: row['Product Name'] || '',
+                            serialNumber: row['Serial Number'] || '',
+                            issue: row['Issue'] || '',
+                            maintenanceResponse: row['Maintenance Response'] || '',
+                            creditNoteValue: row['Credit Note Value'] || '',
+                            replacementSerialNumber: row['Replacement SN'] || '',
+                            systemTransferNumber: row['System Transfer Number'] || '',
+                            customerDeliveryDate: row['Customer Delivery Date'] || '',
+                            maintenanceReceiptNumber: row['Maintenance Receipt Number'] || '',
+                            notes: row['Notes'] || '',
+                            videoLink: row['Video Link'] || ''
+                        };
+                    });
+
+                    // Validate imported data
+                    const invalidRecords = importedRecords.filter(r => !r.customerName || !r.productName || !r.serialNumber);
+                    if (invalidRecords.length > 0) {
+                        showToast(`${invalidRecords.length} records have missing required fields and were skipped`, 'error');
+                    }
+
+                    const validRecords = importedRecords.filter(r => r.customerName && r.productName && r.serialNumber);
+
+                    if (validRecords.length === 0) {
+                        showToast('No valid records found. Please check Excel file format.', 'error');
+                        return;
+                    }
+
+                    // Add records to system
+                    records = [...records, ...validRecords];
+                    localStorage.setItem('maintenanceRecords', JSON.stringify(records));
+
+                    updateStats();
+                    filterRecords();
+
+                    showToast(`Successfully imported ${validRecords.length} records from Excel`, 'success');
+                } catch (error) {
+                    console.error('Import error:', error);
+                    showToast('Failed to import Excel file. Please check file format.', 'error');
+                }
+
+                event.target.value = '';
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        // Create backup
+        function createBackup() {
+            if (records.length === 0) {
+                showToast('No records to backup', 'error');
+                return;
+            }
+
+            const backupData = {
+                version: '1.0',
+                timestamp: new Date().toISOString(),
+                totalRecords: records.length,
+                records: records
+            };
+
+            const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            
+            const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '_');
+            a.download = `rsilou_maintenance_backup_${timestamp}.json`;
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast(`Backup created with ${records.length} records`, 'success');
+        }
+
+        // Restore backup
+        function restoreBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const backupData = JSON.parse(e.target.result);
+
+                    if (!backupData.records || !Array.isArray(backupData.records)) {
+                        showToast('Invalid backup file format', 'error');
+                        return;
+                    }
+
+                    if (confirm(`Restore backup from ${new Date(backupData.timestamp).toLocaleString()}?\n\nThis contains ${backupData.records.length} records.\n\nExisting data will be merged with backup.`)) {
+                        records = [...backupData.records];
+                        localStorage.setItem('maintenanceRecords', JSON.stringify(records));
+
+                        updateStats();
+                        filterRecords();
+
+                        showToast(`Restored ${records.length} records from backup`, 'success');
+                    }
+                } catch (error) {
+                    console.error('Restore error:', error);
+                    showToast('Failed to restore backup. Invalid file format.', 'error');
+                }
+
+                event.target.value = '';
+            };
+
+            reader.readAsText(file);
+        }
+
+        // Filter by tab
+        function filterByTab(tab) {
+            currentTab = tab;
+            
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            
+            filterRecords();
+        }
+
+        // Filter records
+        function filterRecords() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const category = currentTab;
+
+            filteredRecords = records.filter(record => {
+                // Text search
+                const matchSearch = !search || 
+                    record.customerName.toLowerCase().includes(search) ||
+                    record.productName.toLowerCase().includes(search) ||
+                    record.serialNumber.toLowerCase().includes(search) ||
+                    record.customerCode.toLowerCase().includes(search) ||
+                    record.area.toLowerCase().includes(search) ||
+                    record.governrate.toLowerCase().includes(search) ||
+                    record.deliveryREP.toLowerCase().includes(search);
+
+                // Status filter
+                const matchStatus = status === 'all' || record.status === status;
+
+                // Category filter
+                const matchCategory = category === 'all' || record.category === category;
+
+                return matchSearch && matchStatus && matchCategory;
+            });
+
+            currentPage = 1;
+            renderTable();
+        }
+
+        // Render table
+        function renderTable() {
+            const container = document.getElementById('tableContainer');
+
+            if (filteredRecords.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <p style="font-size: 18px; font-weight: 600;">No records found</p>
+                        <p style="margin-top: 8px;">Try adjusting your search or filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Calculate pagination
+            const startIndex = (currentPage - 1) * recordsPerPage;
+            const endIndex = startIndex + recordsPerPage;
+            const pageRecords = filteredRecords.slice(startIndex, endIndex);
+
+            let html = `
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Customer</th>
+                                <th>Product</th>
+                                <th>Serial Number</th>
+                                <th>Category</th>
+                                <th>Delivery Rep</th>
+                                <th>Issue</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            pageRecords.forEach(record => {
+                let statusBadge = '';
+                if (record.status === 'Closed') {
+                    statusBadge = '<span class="badge badge-closed">✓ Closed</span>';
+                } else if (record.status === 'Pending') {
+                    statusBadge = '<span class="badge badge-pending">⏱ Pending</span>';
+                } else if (record.status === 'Rejected') {
+                    statusBadge = '<span class="badge badge-rejected">✕ Rejected</span>';
+                } else {
+                    statusBadge = `<span class="badge badge-outline">${record.status}</span>`;
+                }
+
+                html += `
+                    <tr>
+                        <td>${statusBadge}</td>
+                        <td>
+                            <div style="font-weight: 600; color: #0f172a;">${escapeHtml(record.customerName)}</div>
+                            <div style="font-size: 13px; color: #64748b; margin-top: 4px;">${escapeHtml(record.customerCode)}</div>
+                        </td>
+                        <td style="max-width: 250px;" title="${escapeHtml(record.productName)}">
+                            ${escapeHtml(record.productName.length > 40 ? record.productName.substring(0, 40) + '...' : record.productName)}
+                        </td>
+                        <td style="font-family: monospace; font-size: 13px;">${escapeHtml(record.serialNumber)}</td>
+                        <td><span class="badge badge-outline">${escapeHtml(record.category)}</span></td>
+                        <td style="font-size: 13px;">${escapeHtml(record.deliveryREP || '-')}</td>
+                        <td style="max-width: 200px;" title="${escapeHtml(record.issue)}">
+                            ${escapeHtml(record.issue ? (record.issue.length > 30 ? record.issue.substring(0, 30) + '...' : record.issue) : '-')}
+                        </td>
+                        <td style="font-size: 13px;">${escapeHtml(record.receivingDate)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-ghost btn-sm" onclick="viewRecord(${record.id})">👁️ View</button>
+                                <button class="btn btn-ghost btn-sm" onclick="editRecord(${record.id})">✏️ Edit</button>
+                                <button class="btn btn-ghost btn-sm" onclick="deleteRecord(${record.id})" style="color: #ef4444;">🗑️ Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                `;
+
+            html += renderPagination();
+
+            container.innerHTML = html;
+        }
+
+        // Render pagination
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredRecords.length / recordsPerPage);
+            
+            if (totalPages <= 1) return '';
+
+            let html = `
+                <div class="pagination">
+                    <div class="pagination-info">
+                        Showing <strong>${((currentPage - 1) * recordsPerPage) + 1}</strong> to 
+                        <strong>${Math.min(currentPage * recordsPerPage, filteredRecords.length)}</strong> of 
+                        <strong>${filteredRecords.length}</strong> records
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" onclick="changePage('first')" ${currentPage === 1 ? 'disabled' : ''}>⏮ First</button>
+                        <button class="pagination-btn" onclick="changePage('prev')" ${currentPage === 1 ? 'disabled' : ''}>◀ Prev</button>
+                        <span class="pagination-pages">Page ${currentPage} of ${totalPages}</span>
+                        <button class="pagination-btn" onclick="changePage('next')" ${currentPage === totalPages ? 'disabled' : ''}>Next ▶</button>
+                        <button class="pagination-btn" onclick="changePage('last')" ${currentPage === totalPages ? 'disabled' : ''}>Last ⏭</button>
+                    </div>
+                    <div class="pagination-jump">
+                        <label>Jump to page: </label>
+                        <select class="pagination-select" onchange="changePage('goto', this.value)">
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<option value="${i}" ${i === currentPage ? 'selected' : ''}>${i}</option>`;
+            }
+
+            html += `
+                        </select>
+                    </div>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // Change page
+        function changePage(action, pageValue = null) {
+            const totalPages = Math.ceil(filteredRecords.length / recordsPerPage);
+
+            switch (action) {
+                case 'first':
+                    currentPage = 1;
+                    break;
+                case 'last':
+                    currentPage = totalPages;
+                    break;
+                case 'prev':
+                    currentPage = Math.max(1, currentPage - 1);
+                    break;
+                case 'next':
+                    currentPage = Math.min(totalPages, currentPage + 1);
+                    break;
+                case 'goto':
+                    currentPage = parseInt(pageValue);
+                    break;
+            }
+
+            renderTable();
+        }
+
+        // Open add modal
+        function openAddModal() {
+            isEditing = false;
+            document.getElementById('modalTitle').textContent = 'Add New Record';
+            document.getElementById('saveBtn').textContent = '💾 Save Data';
+            
+            document.getElementById('recordForm').reset();
+            document.getElementById('recordId').value = '';
+            document.getElementById('receivingDate').value = new Date().toISOString().split('T')[0];
+            
+            // Ensure hidden state is reset
+            document.getElementById('creditNoteGroup').classList.add('hidden');
+            
+            document.getElementById('recordModal').classList.remove('hidden');
+        }
+
+        // Edit existing record
+        function editRecord(id) {
+            isEditing = true;
+            const record = records.find(r => r.id === id);
+            if (!record) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Record #' + record.id;
+            document.getElementById('saveBtn').textContent = '💾 Update Data';
+
+            document.getElementById('recordId').value = record.id;
+            document.getElementById('status').value = record.status;
+            document.getElementById('receivingDate').value = record.receivingDate;
+            document.getElementById('deliveryREP').value = record.deliveryREP || '';
+            document.getElementById('deliveryREP2').value = record.deliveryREP || '';
+            document.getElementById('customerName').value = record.customerName;
+            document.getElementById('customerCode').value = record.customerCode || '';
+            document.getElementById('area').value = record.area || '';
+            document.getElementById('governrate').value = record.governrate || '';
+            document.getElementById('category').value = record.category || '';
+            document.getElementById('productName').value = record.productName;
+            document.getElementById('serialNumber').value = record.serialNumber;
+            document.getElementById('issue').value = record.issue || '';
+            document.getElementById('maintenanceResponse').value = record.maintenanceResponse || '';
+            document.getElementById('creditNoteValue').value = record.creditNoteValue || '';
+            document.getElementById('replacementSerialNumber').value = record.replacementSerialNumber || '';
+            document.getElementById('systemTransferNumber').value = record.systemTransferNumber || '';
+            document.getElementById('customerDeliveryDate').value = record.customerDeliveryDate || '';
+            document.getElementById('maintenanceReceiptNumber').value = record.maintenanceReceiptNumber || '';
+            document.getElementById('notes').value = record.notes || '';
+
+            // Trigger change event manually to handle visibility logic
+            document.getElementById('maintenanceResponse').dispatchEvent(new Event('change'));
+
+            document.getElementById('recordModal').classList.remove('hidden');
+        }
+
+        // Save record
+        function saveRecord() {
+            const form = document.getElementById('recordForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            const deliveryREP = document.getElementById('deliveryREP').value || document.getElementById('deliveryREP2').value;
+
+            const recordData = {
+                status: document.getElementById('status').value,
+                receivingDate: document.getElementById('receivingDate').value,
+                deliveryREP: deliveryREP,
+                customerName: document.getElementById('customerName').value,
+                customerCode: document.getElementById('customerCode').value,
+                area: document.getElementById('area').value,
+                governrate: document.getElementById('governrate').value,
+                category: document.getElementById('category').value,
+                productName: document.getElementById('productName').value,
+                serialNumber: document.getElementById('serialNumber').value,
+                issue: document.getElementById('issue').value,
+                maintenanceResponse: document.getElementById('maintenanceResponse').value,
+                creditNoteValue: document.getElementById('creditNoteValue').value, // Capture Credit Note Value
+                replacementSerialNumber: document.getElementById('replacementSerialNumber').value,
+                systemTransferNumber: document.getElementById('systemTransferNumber').value,
+                deliveryToCustomer: deliveryREP,
+                customerDeliveryDate: document.getElementById('customerDeliveryDate').value,
+                maintenanceReceiptNumber: document.getElementById('maintenanceReceiptNumber').value,
+                notes: document.getElementById('notes').value
+            };
+
+            if (isEditing) {
+                const id = parseInt(document.getElementById('recordId').value);
+                const index = records.findIndex(r => r.id === id);
+                if (index !== -1) {
+                    records[index] = { ...records[index], ...recordData };
+                    localStorage.setItem('maintenanceRecords', JSON.stringify(records));
+                    showToast('Record updated successfully!', 'success');
+                }
+            } else {
+                const newId = Math.max(...records.map(r => r.id), 0) + 1;
+                records.push({ id: newId, ...recordData });
+                localStorage.setItem('maintenanceRecords', JSON.stringify(records));
+                showToast('New record added successfully!', 'success');
+            }
+
+            updateStats();
+            filterRecords();
+            closeModal();
+        }
+
+        // Delete record
+        function deleteRecord(id) {
+            if (confirm('Are you sure you want to delete this record? This action cannot be undone.')) {
+                records = records.filter(r => r.id !== id);
+                localStorage.setItem('maintenanceRecords', JSON.stringify(records));
+                updateStats();
+                filterRecords();
+                showToast('Record deleted successfully', 'info');
+            }
+        }
+
+        // View record details
+        function viewRecord(id) {
+            const record = records.find(r => r.id === id);
+            if (!record) return;
+
+            currentViewingId = id;
+
+            let statusBadge = '';
+            if (record.status === 'Closed') {
+                statusBadge = '<span class="badge badge-closed">✓ Closed</span>';
+            } else if (record.status === 'Pending') {
+                statusBadge = '<span class="badge badge-pending">⏱ Pending</span>';
+            } else if (record.status === 'Rejected') {
+                statusBadge = '<span class="badge badge-rejected">✕ Rejected</span>';
+            } else {
+                statusBadge = `<span class="badge badge-outline">${record.status}</span>`;
+            }
+
+            // HTML for Credit Note in View Modal (Only show if Credit Note is selected)
+            let creditNoteDisplay = '';
+            if (record.maintenanceResponse === 'Credit Note' && record.creditNoteValue) {
+                creditNoteDisplay = `
+                    <div style="background: #dbeafe; padding: 20px; border-radius: 12px; border: 2px solid #3b82f6; margin-bottom: 24px;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">💰 Credit Note</h3>
+                        <div style="font-size: 18px; font-weight: bold; color: #1e40af;">${escapeHtml(record.creditNoteValue)}</div>
+                    </div>
+                `;
+            }
+
+            let html = `
+                <div style="text-align: center; margin-bottom: 24px;">
+                    ${statusBadge}
+                    <h2 style="font-size: 24px; font-weight: 700; color: #0f172a; margin-top: 16px;">
+                        Record #${record.id}
+                    </h2>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px;">
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 2px solid #e2e8f0;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">👤 Customer Info</h3>
+                        <div><strong>Name:</strong> ${escapeHtml(record.customerName)}</div>
+                        <div><strong>Code:</strong> ${escapeHtml(record.customerCode || '-')}</div>
+                        <div><strong>Area:</strong> ${escapeHtml(record.area || '-')}</div>
+                        <div><strong>Governorate:</strong> ${escapeHtml(record.governrate || '-')}</div>
+                        <div><strong>Delivery Rep:</strong> ${escapeHtml(record.deliveryREP || '-')}</div>
+                    </div>
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 2px solid #e2e8f0;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">📦 Product Info</h3>
+                        <div><strong>Product:</strong> ${escapeHtml(record.productName)}</div>
+                        <div><strong>Category:</strong> <span class="badge badge-outline">${escapeHtml(record.category)}</span></div>
+                        <div><strong>Serial #:</strong> ${escapeHtml(record.serialNumber)}</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px;">
+                    <div style="background: #fef9c3; padding: 20px; border-radius: 12px; border: 2px solid #fde047;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">🔧 Issue</h3>
+                        <div style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 8px;">${escapeHtml(record.issue || '-')}</div>
+                    </div>
+                    <div style="background: #bbf7d0; padding: 20px; border-radius: 12px; border: 2px solid #a3e635;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">✅ Response</h3>
+                        <div style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 8px; font-weight:600;">${escapeHtml(record.maintenanceResponse || '-')}</div>
+                    </div>
+                </div>
+
+                ${creditNoteDisplay}
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px;">
+                    <div style="background: #dbeafe; padding: 20px; border-radius: 12px; border: 2px solid #3b82f6;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">📅 Received</h3>
+                        <div>${escapeHtml(record.receivingDate || '-')}</div>
+                    </div>
+                    <div style="background: #e0e7ff; padding: 20px; border-radius: 12px; border: 2px solid #6366f1;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">🚚 Delivered</h3>
+                        <div>${escapeHtml(record.customerDeliveryDate || 'Not delivered yet')}</div>
+                    </div>
+                </div>
+            `;
+
+            if (record.replacementSerialNumber || record.systemTransferNumber) {
+                html += `
+                    <div style="background: #fce7f3; padding: 20px; border-radius: 12px; border: 2px solid #f59e0b; margin-bottom: 24px;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">🔄 Replacement & Transfer</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                            <div><strong>Replace SN:</strong> ${escapeHtml(record.replacementSerialNumber || '-')}</div>
+                            <div><strong>Transfer #:</strong> ${escapeHtml(record.systemTransferNumber || '-')}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (record.maintenanceReceiptNumber) {
+                html += `
+                    <div style="background: #f3e8ff; padding: 20px; border-radius: 12px; border: 2px solid #a855f7; margin-bottom: 24px;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">📄 Receipt</h3>
+                        <div><strong>Receipt #:</strong> ${escapeHtml(record.maintenanceReceiptNumber)}</div>
+                    </div>
+                `;
+            }
+
+            if (record.notes) {
+                html += `
+                    <div style="background: #fffbeb; padding: 20px; border-radius: 12px; border: 2px solid #fcd34d; margin-bottom: 24px;">
+                        <h3 style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 12px;">📌 Notes</h3>
+                        <div style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">${escapeHtml(record.notes)}</div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('viewModalBody').innerHTML = html;
+            document.getElementById('viewModal').classList.remove('hidden');
+        }
+
+        // Print record report as PDF
+        function printPDF() {
+            const record = records.find(r => r.id === currentViewingId);
+            if (!record) {
+                showToast('No record found', 'error');
+                return;
+            }
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('l', 'mm', 'a4');
+                
+                const pageWidth = 297;
+                const pageHeight = 210;
+                const margin = 8;
+                const usableWidth = pageWidth - (margin * 2);
+                
+                // Title
+                doc.setFontSize(13);
+                doc.setTextColor(59, 130, 246);
+                doc.text('Maintenance Record', pageWidth / 2, 10, { align: 'center' });
+                
+                doc.setFontSize(9);
+                doc.setTextColor(107, 114, 128);
+                doc.text(`#${record.id} - ${record.status}`, pageWidth / 2, 16, { align: 'center' });
+                
+                doc.setFontSize(7);
+                doc.setTextColor(148, 163, 184);
+                doc.text(new Date().toLocaleDateString(), pageWidth / 2, 20, { align: 'center' });
+                
+                doc.setDrawColor(226, 232, 240);
+                doc.setLineWidth(0.2);
+                doc.line(margin, 23, pageWidth - margin, 23);
+                
+                const currentY = 27;
+                const sectionGap = 3;
+                const tableWidth = usableWidth;
+                const col1Width = 40;
+                const col2Width = tableWidth - col1Width;
+                
+                // Customer
+                doc.setFontSize(9);
+                doc.setTextColor(15, 23, 42);
+                doc.text('Customer', margin, currentY);
+                
+                doc.autoTable({
+                    startY: currentY + 2,
+                    head: [['Field', 'Value']],
+                    body: [
+                        ['Name', record.customerName || '-'],
+                        ['Code', record.customerCode || '-'],
+                        ['Area', record.area || '-'],
+                        ['Gov', record.governrate || '-'],
+                        ['Delivery', record.deliveryREP || '-']
+                    ],
+                    theme: 'grid',
+                    styles: { fontSize: 7, cellPadding: 1 },
+                    headStyles: { fillColor: [59, 130, 246], textColor: 255, fontSize: 7, fontStyle: 'bold' },
+                    columnStyles: {
+                        0: { cellWidth: col1Width, fontStyle: 'bold' },
+                        1: { cellWidth: col2Width }
+                    },
+                    margin: { top: 0, left: margin, right: margin }
+                });
+                
+                // Product
+                let y1 = doc.lastAutoTable.finalY + sectionGap;
+                doc.setFontSize(9);
+                doc.setTextColor(15, 23, 42);
+                doc.text('Product', margin, y1);
+                
+                doc.autoTable({
+                    startY: y1 + 2,
+                    head: [['Field', 'Value']],
+                    body: [
+                        ['Name', record.productName || '-'],
+                        ['Cat', record.category || '-'],
+                        ['SN', record.serialNumber || '-']
+                    ],
+                    theme: 'grid',
+                    styles: { fontSize: 7, cellPadding: 1 },
+                    headStyles: { fillColor: [34, 197, 94], textColor: 255, fontSize: 7, fontStyle: 'bold' },
+                    columnStyles: {
+                        0: { cellWidth: col1Width, fontStyle: 'bold' },
+                        1: { cellWidth: col2Width }
+                    },
+                    margin: { top: 0, left: margin, right: margin }
+                });
+                
+                // Issue & Response
+                let y2 = doc.lastAutoTable.finalY + sectionGap;
+                doc.setFontSize(9);
+                doc.setTextColor(15, 23, 42);
+                doc.text('Issue & Response', margin, y2);
+                
+                let responseBody = [
+                    ['Issue', record.issue || '-'],
+                    ['Response', record.maintenanceResponse || '-']
+                ];
+
+                // If Credit Note, add value to body
+                if(record.maintenanceResponse === 'Credit Note' && record.creditNoteValue) {
+                    responseBody.push(['Credit Note Value', record.creditNoteValue]);
+                }
+
+                doc.autoTable({
+                    startY: y2 + 2,
+                    head: [['Field', 'Value']],
+                    body: responseBody,
+                    theme: 'grid',
+                    styles: { fontSize: 7, cellPadding: 1 },
+                    headStyles: { fillColor: [245, 158, 11], textColor: 255, fontSize: 7, fontStyle: 'bold' },
+                    columnStyles: {
+                        0: { cellWidth: col1Width, fontStyle: 'bold' },
+                        1: { cellWidth: col2Width, cellWidth: 'wrap' }
+                    },
+                    margin: { top: 0, left: margin, right: margin }
+                });
+                
+                // Timeline
+                let y3 = doc.lastAutoTable.finalY + sectionGap;
+                doc.setFontSize(9);
+                doc.setTextColor(15, 23, 42);
+                doc.text('Timeline', margin, y3);
+                
+                doc.autoTable({
+                    startY: y3 + 2,
+                    head: [['Field', 'Value']],
+                    body: [
+                        ['Received', record.receivingDate || '-'],
+                        ['Delivered', record.customerDeliveryDate || 'Not delivered']
+                    ],
+                    theme: 'grid',
+                    styles: { fontSize: 7, cellPadding: 1 },
+                    headStyles: { fillColor: [59, 130, 246], textColor: 255, fontSize: 7, fontStyle: 'bold' },
+                    columnStyles: {
+                        0: { cellWidth: col1Width, fontStyle: 'bold' },
+                        1: { cellWidth: col2Width }
+                    },
+                    margin: { top: 0, left: margin, right: margin }
+                });
+                
+                // Replacement & Transfer
+                if (record.replacementSerialNumber || record.systemTransferNumber) {
+                    let y4 = doc.lastAutoTable.finalY + sectionGap;
+                    doc.setFontSize(9);
+                    doc.setTextColor(15, 23, 42);
+                    doc.text('Replace & Transfer', margin, y4);
+                    
+                    doc.autoTable({
+                        startY: y4 + 2,
+                        head: [['Field', 'Value']],
+                        body: [
+                            ['Replace SN', record.replacementSerialNumber || '-'],
+                            ['Transfer #', record.systemTransferNumber || '-']
+                        ],
+                        theme: 'grid',
+                        styles: { fontSize: 7, cellPadding: 1 },
+                        headStyles: { fillColor: [34, 197, 94], textColor: 255, fontSize: 7, fontStyle: 'bold' },
+                        columnStyles: {
+                            0: { cellWidth: col1Width, fontStyle: 'bold' },
+                            1: { cellWidth: col2Width }
+                        },
+                        margin: { top: 0, left: margin, right: margin }
+                    });
+                }
+                
+                // Receipt
+                if (record.maintenanceReceiptNumber) {
+                    let y5 = doc.lastAutoTable.finalY + sectionGap;
+                    doc.setFontSize(9);
+                    doc.setTextColor(15, 23, 42);
+                    doc.text('Receipt', margin, y5);
+                    
+                    doc.autoTable({
+                        startY: y5 + 2,
+                        head: [['Field', 'Value']],
+                        body: [
+                            ['#', record.maintenanceReceiptNumber || '-']
+                        ],
+                        theme: 'grid',
+                        styles: { fontSize: 7, cellPadding: 1 },
+                        headStyles: { fillColor: [59, 130, 246], textColor: 255, fontSize: 7, fontStyle: 'bold' },
+                        columnStyles: {
+                            0: { cellWidth: col1Width, fontStyle: 'bold' },
+                            1: { cellWidth: col2Width }
+                        },
+                        margin: { top: 0, left: margin, right: margin }
+                    });
+                }
+                
+                // Notes
+                if (record.notes) {
+                    let y6 = doc.lastAutoTable.finalY + sectionGap;
+                    doc.setFontSize(9);
+                    doc.setTextColor(15, 23, 42);
+                    doc.text('Notes', margin, y6);
+                    
+                    doc.autoTable({
+                        startY: y6 + 2,
+                        head: [['Notes']],
+                        body: [[record.notes]],
+                        theme: 'plain',
+                        styles: { fontSize: 7, cellPadding: 1, fontStyle: 'normal' },
+                        headStyles: { fillColor: [245, 158, 11], textColor: 255, fontSize: 7, fontStyle: 'bold' },
+                        columnStyles: { 0: { cellWidth: usableWidth, cellWidth: 'wrap' } },
+                        margin: { top: 0, left: margin, right: margin }
+                    });
+                }
+                
+                // Footer
+                const footerY = Math.max(doc.lastAutoTable.finalY + 8, pageHeight - 12);
+                doc.setDrawColor(226, 232, 240);
+                doc.line(margin, footerY - 4, pageWidth - margin, footerY - 4);
+                
+                doc.setFontSize(7);
+                doc.setTextColor(148, 163, 184);
+                doc.text('Rsilou Maintenance System - 2026', pageWidth / 2, footerY, { align: 'center' });
+                doc.text('All rights reserved.', pageWidth / 2, footerY + 4, { align: 'center' });
+                
+                doc.autoTable({});
+                doc.save(`maintenance_record_${record.id}_${record.customerName.replace(/\s+/g, '_')}.pdf`, { autoPrint: true });
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                showToast('Failed to generate report', 'error');
+            }
+        }
+
+
+        // Close modals
+        function closeModal() {
+            document.getElementById('recordModal').classList.add('hidden');
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.add('hidden');
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (confirm('Are you sure you want to delete ALL records? This action cannot be undone!')) {
+                if (confirm('This is your last chance! All data will be permanently deleted.')) {
+                    records = [];
+                    localStorage.removeItem('maintenanceRecords');
+                    updateStats();
+                    filterRecords();
+                    showToast('All records deleted', 'info');
+                }
+            }
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Show toast
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = 'ℹ️';
+            if (type === 'success') icon = '✅';
+            if (type === 'error') icon = '⚠️';
+            
+            toast.innerHTML = `<span style="font-size:1.2rem">${icon}</span><span>${message}</span>`;
+            
+            container.appendChild(toast);
+
+            // Remove after 3 seconds with animation
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.4s ease forwards';
+                setTimeout(() => {
+                    if(toast.parentElement) toast.remove();
+                }, 400);
+            }, 3000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeViewModal();
+            }
+        });
+    </script>
+</body>
+</html>
